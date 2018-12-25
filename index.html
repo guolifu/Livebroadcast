@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>直播</title>
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/demo.css">
+<style>
+
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="row">
+            <div class="col-md-3 col-xs-12"><h1 class="logo"><a href="http://www.helloweba.net" title="返回helloweba首页">helloweba</a></h1></div>
+            <div class="col-md-9 text-right"</div>
+        </div>
+    </header>
+    <div class="row main">
+        <div class="col-md-12">
+            <h2 class="top_title"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span><a href="http://www.helloweba.net/javascript/571.html">直播</a>/房间号:<input id='room'><button id='sub'>查房</button></h2>
+            <div class="container" style="width: 96%; margin: 30px auto">
+                <video id="video" controls loop="false" width="100%"></video>
+            </div>
+        </div>
+    </div>
+    <footer>
+    </footer>
+</div>
+<script src="hls.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+$(function(){
+    loadroom('test');
+	$('#sub').click(function(){
+	    var room = $('#room').val();
+        loadroom(room)
+	})
+});
+function loadroom(room) {
+    var video = document.getElementById('video');
+    if(Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource('http://'+document.domain+'/hls/'+room+'.m3u8');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+            video.play();
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = 'http://'+document.domain+'/hls/'+room+'.m3u8';
+        video.addEventListener('loadedmetadata',function() {
+            video.play();
+        });
+    }
+}
+
+</script>
+</body>
+</html>
